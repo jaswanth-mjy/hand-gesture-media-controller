@@ -1,6 +1,14 @@
-# 🎬 Pause or Play - Hand Gesture Media Controller
+# 🎬 Hand Gesture Media Controller
+
+[![GitHub Stars](https://img.shields.io/github/stars/jaswanth-mjy/hand-gesture-media-controller?style=social)](https://github.com/jaswanth-mjy/hand-gesture-media-controller/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/jaswanth-mjy/hand-gesture-media-controller?style=social)](https://github.com/jaswanth-mjy/hand-gesture-media-controller/network/members)
+[![GitHub Issues](https://img.shields.io/github/issues/jaswanth-mjy/hand-gesture-media-controller)](https://github.com/jaswanth-mjy/hand-gesture-media-controller/issues)
+[![GitHub License](https://img.shields.io/github/license/jaswanth-mjy/hand-gesture-media-controller)](https://github.com/jaswanth-mjy/hand-gesture-media-controller/blob/main/LICENSE)
+[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
 
 A computer vision application that controls media playback (videos, music, streaming) using hand gestures detected through your webcam. Simply show your hand to the camera to play or pause any media on your laptop!
+
+🔗 **[View Demo](https://github.com/jaswanth-mjy/hand-gesture-media-controller)** | 📖 **[Documentation](https://github.com/jaswanth-mjy/hand-gesture-media-controller#readme)** | 🐛 **[Report Bug](https://github.com/jaswanth-mjy/hand-gesture-media-controller/issues)** | ✨ **[Request Feature](https://github.com/jaswanth-mjy/hand-gesture-media-controller/issues)**
 
 ## ✨ Features
 
@@ -42,6 +50,21 @@ Webcam → OpenCV → MediaPipe Hand Detection → Finger Counting → Gesture R
 - macOS, Windows, or Linux
 
 ## 🚀 Installation
+
+### Option 1: Clone from GitHub (Recommended)
+
+```bash
+# Clone the repository
+git clone https://github.com/jaswanth-mjy/hand-gesture-media-controller.git
+
+# Navigate to project directory
+cd hand-gesture-media-controller
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+### Option 2: Manual Setup
 
 ### 1. Clone or Download the Project
 
