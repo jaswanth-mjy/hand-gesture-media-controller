@@ -127,20 +127,20 @@ def main():
             text = "NO HAND DETECTED"
             color = (0, 165, 255)  # Orange
         elif gesture == "OPEN_PALM":
-            text = f"OPEN PALM ({finger_count} fingers) - PAUSE ⏸"
+            text = f"OPEN PALM ({finger_count} fingers) - PAUSE"
             color = (0, 255, 0)  # Green
         elif gesture == "CLOSED_FIST":
-            text = f"CLOSED FIST ({finger_count} fingers) - PLAY ▶"
+            text = f"CLOSED FIST ({finger_count} fingers) - PLAY"
             color = (0, 0, 255)  # Red
         elif gesture == "PEACE_SIGN":
-            text = f"PEACE SIGN ({finger_count} fingers) - REWIND ⏪"
+            text = f"PEACE SIGN ({finger_count} fingers) - REWIND 10s"
             color = (255, 0, 255)  # Magenta
         elif gesture == "THREE_FINGERS":
-            text = f"THREE FINGERS ({finger_count} fingers) - FORWARD ⏩"
+            text = f"THREE FINGERS ({finger_count} fingers) - FORWARD 10s"
             color = (255, 255, 0)  # Yellow
         elif gesture == "FOUR_FINGERS":
-            text = f"FOUR FINGERS ({finger_count} fingers) - SHUTDOWN 🔴"
-            color = (0, 0, 255)  # Red
+            text = f"FOUR FINGERS ({finger_count} fingers) - SHUTDOWN MAC"
+            color = (255, 0, 0)  # Bright Red
         else:
             text = f"UNKNOWN GESTURE ({finger_count} fingers)"
             color = (128, 128, 128)  # Gray
@@ -155,7 +155,7 @@ def main():
                         cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2, cv2.LINE_AA)
             
             # Visual finger indicator
-            finger_indicator = "○ " * finger_count + "● " * (5 - finger_count)
+            finger_indicator = "O " * finger_count + "X " * (5 - finger_count)
             cv2.putText(img, finger_indicator, (20, 160),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.6, (100, 200, 255), 1, cv2.LINE_AA)
         
