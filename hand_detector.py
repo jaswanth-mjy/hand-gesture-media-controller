@@ -95,20 +95,26 @@ class HandDetector:
         middle_mcp_y = landmark_list[9][2]
         palm_base_y = (wrist_y + middle_mcp_y) / 2
         
-        # THUMB - Special handling for thumb
+        # THUMB - Special handling for thumb (much stricter to avoid false positives)
         thumb_tip_x = landmark_list[4][1]
         thumb_tip_y = landmark_list[4][2]
         thumb_ip_x = landmark_list[3][1]
+        thumb_mcp_x = landmark_list[2][1]
         wrist_x = landmark_list[0][1]
         index_mcp_x = landmark_list[5][1]
         
-        # Thumb is extended if:
-        # 1. Tip is far from palm horizontally
-        # 2. Tip is not curled down (Y position check)
-        thumb_dist = abs(thumb_tip_x - wrist_x)
+        # Calculate if thumb is extended horizontally (for right hand)
+        # Thumb tip should be far from index finger MCP
+        thumb_to_index_dist = abs(thumb_tip_x - index_mcp_x)
         palm_width = abs(index_mcp_x - wrist_x)
         
-        if thumb_dist > palm_width * 0.6 and thumb_tip_y < palm_base_y + 50:
+        # Thumb is extended ONLY if:
+        # 1. Tip is FAR from index finger (more than 80% of palm width)
+        # 2. Thumb tip is beyond thumb MCP horizontally
+        # 3. Tip Y position is above palm base (not curled down)
+        thumb_extended_horizontally = abs(thumb_tip_x - thumb_mcp_x) > palm_width * 0.5
+        
+        if thumb_to_index_dist > palm_width * 0.8 and thumb_extended_horizontally and thumb_tip_y < palm_base_y + 30:
             fingers_up.append("thumb")
         
         # OTHER 4 FINGERS - Use both PIP and MCP for better accuracy
@@ -123,13 +129,12 @@ class HandDetector:
             mcp_y = landmark_list[finger_mcps[i]][2]
             
             # Finger is extended if:
-            # 1. Tip is significantly above PIP (at least 30 pixels)
-            # 2. PIP is above MCP (finger is straight, not bent at knuckle)
-            # This prevents counting slightly bent fingers
+            # 1. Tip is significantly above PIP (at least 25 pixels - slightly reduced)
+            # 2. PIP is above or near MCP (finger is straight)
             tip_pip_diff = pip_y - tip_y
             pip_mcp_diff = mcp_y - pip_y
             
-            if tip_pip_diff > 30 and pip_mcp_diff > -10:
+            if tip_pip_diff > 25 and pip_mcp_diff > -15:
                 fingers_up.append(finger_names[i])
         
         return len(fingers_up)
