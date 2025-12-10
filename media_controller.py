@@ -161,6 +161,24 @@ class MediaController:
             print(f"Error skipping backward: {e}")
             return False
     
+    def shutdown(self):
+        """
+        Shutdown the Mac system.
+        Uses osascript to trigger shutdown dialog.
+        """
+        if not self.can_execute_command():
+            return False
+        
+        try:
+            import subprocess
+            # Show shutdown dialog on Mac
+            subprocess.run(['osascript', '-e', 'tell app "System Events" to shut down'], check=True)
+            print("🔴 SHUTDOWN command sent")
+            return True
+        except Exception as e:
+            print(f"Error sending shutdown command: {e}")
+            return False
+    
     def reset_state(self):
         """Reset the current playback state."""
         self.current_state = None

@@ -46,9 +46,10 @@ def main():
     print("\n" + "=" * 70)
     print("GESTURES & CONTROLS:")
     print("  ✊ CLOSED FIST (0-1 fingers)    → PLAY ▶")
-    print("  👋 OPEN PALM (4-5 fingers)     → PAUSE ⏸")
+    print("  👋 OPEN PALM (5 fingers)       → PAUSE ⏸")
     print("  ✌️  PEACE SIGN (2 fingers)      → REWIND 10s ⏪")
     print("  🤟 THREE FINGERS (3 fingers)   → FORWARD 10s ⏩")
+    print("  🖐️  FOUR FINGERS (4 fingers)    → SHUTDOWN 🔴")
     print("\n  Press 'Q' to quit")
     print("=" * 70 + "\n")
     
@@ -108,6 +109,11 @@ def main():
                 if controller.skip_forward():
                     print("\n⏩ FORWARD 10 seconds - Three fingers detected")
                     command_executed_for_current_gesture = True
+            elif gesture == "FOUR_FINGERS":
+                # FOUR FINGERS = SHUTDOWN MAC
+                if controller.shutdown():
+                    print("\n🔴 SHUTDOWN initiated - Four fingers detected")
+                    command_executed_for_current_gesture = True
         
         # Display information on screen
         h, w, c = img.shape
@@ -132,6 +138,9 @@ def main():
         elif gesture == "THREE_FINGERS":
             text = f"THREE FINGERS ({finger_count} fingers) - FORWARD ⏩"
             color = (255, 255, 0)  # Yellow
+        elif gesture == "FOUR_FINGERS":
+            text = f"FOUR FINGERS ({finger_count} fingers) - SHUTDOWN 🔴"
+            color = (0, 0, 255)  # Red
         else:
             text = f"UNKNOWN GESTURE ({finger_count} fingers)"
             color = (128, 128, 128)  # Gray
@@ -165,7 +174,7 @@ def main():
         guide_y = h - 80
         cv2.rectangle(img, (10, guide_y - 10), (w - 10, h - 10), (0, 0, 0), -1)
         cv2.rectangle(img, (10, guide_y - 10), (w - 10, h - 10), (255, 255, 255), 1)
-        cv2.putText(img, "Gestures: Fist=Play | Palm=Pause | 2 Fingers=Rewind | 3 Fingers=Forward | Q=Quit", 
+        cv2.putText(img, "Gestures: Fist=Play | Palm=Pause | 2F=Rewind | 3F=Forward | 4F=Shutdown | Q=Quit", 
                     (20, guide_y + 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (200, 200, 200), 1, cv2.LINE_AA)
         
         # Show the frame
