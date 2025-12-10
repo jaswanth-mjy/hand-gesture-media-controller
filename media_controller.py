@@ -131,6 +131,36 @@ class MediaController:
             print(f"Error decreasing volume: {e}")
             return False
     
+    def skip_forward(self):
+        """Skip forward 10 seconds in media playback."""
+        if not self.can_execute_command():
+            return False
+        
+        try:
+            # Right arrow or 'l' key for YouTube (10 seconds forward)
+            # Works for: YouTube, VLC, most video players
+            pyautogui.press('right')
+            print("⏩ SKIP FORWARD 10 seconds")
+            return True
+        except Exception as e:
+            print(f"Error skipping forward: {e}")
+            return False
+    
+    def skip_backward(self):
+        """Skip backward 10 seconds in media playback."""
+        if not self.can_execute_command():
+            return False
+        
+        try:
+            # Left arrow or 'j' key for YouTube (10 seconds backward)
+            # Works for: YouTube, VLC, most video players
+            pyautogui.press('left')
+            print("⏪ SKIP BACKWARD 10 seconds")
+            return True
+        except Exception as e:
+            print(f"Error skipping backward: {e}")
+            return False
+    
     def reset_state(self):
         """Reset the current playback state."""
         self.current_state = None

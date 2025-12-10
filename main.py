@@ -43,12 +43,14 @@ def main():
     
     print("✅ Hand detector initialized")
     print("✅ Media controller initialized")
-    print("\n" + "=" * 60)
-    print("INSTRUCTIONS:")
-    print("  👋 Show OPEN PALM (5 fingers) to PLAY")
-    print("  ✊ Show CLOSED FIST (0 fingers) to PAUSE")
-    print("  Press 'Q' to quit")
-    print("=" * 60 + "\n")
+    print("\n" + "=" * 70)
+    print("GESTURES & CONTROLS:")
+    print("  ✊ CLOSED FIST (0-1 fingers)    → PLAY ▶")
+    print("  👋 OPEN PALM (4-5 fingers)     → PAUSE ⏸")
+    print("  ✌️  PEACE SIGN (2 fingers)      → REWIND 10s ⏪")
+    print("  🤟 THREE FINGERS (3 fingers)   → FORWARD 10s ⏩")
+    print("\n  Press 'Q' to quit")
+    print("=" * 70 + "\n")
     
     # State tracking
     last_gesture = None
@@ -95,27 +97,43 @@ def main():
                 if controller.pause():
                     print("\n✅ PAUSE command sent - Open palm detected")
                     command_executed_for_current_gesture = True
+            elif gesture == "PEACE_SIGN":
+                # PEACE SIGN (2 fingers) = REWIND 10 seconds
+                if controller.skip_backward():
+                    print("\n⏪ REWIND 10 seconds - Peace sign detected")
+                    command_executed_for_current_gesture = True
+            elif gesture == "THREE_FINGERS":
+                # THREE FINGERS = FORWARD 10 seconds
+                if controller.skip_forward():
+                    print("\n⏩ FORWARD 10 seconds - Three fingers detected")
+                    command_executed_for_current_gesture = True
         
         # Display information on screen
         h, w, c = img.shape
         
-        # Background for text
-        cv2.rectangle(img, (10, 10), (w - 10, 150), (0, 0, 0), -1)
-        cv2.rectangle(img, (10, 10), (w - 10, 150), (255, 255, 255), 2)
+        # Background for text (increased height for more gestures)
+        cv2.rectangle(img, (10, 10), (w - 10, 180), (0, 0, 0), -1)
+        cv2.rectangle(img, (10, 10), (w - 10, 180), (255, 255, 255), 2)
         
         # Display gesture and finger count
         if gesture == "NO_HAND":
             text = "NO HAND DETECTED"
             color = (0, 165, 255)  # Orange
         elif gesture == "OPEN_PALM":
-            text = f"OPEN PALM ({finger_count} fingers) - PLAY ▶"
+            text = f"OPEN PALM ({finger_count} fingers) - PAUSE ⏸"
             color = (0, 255, 0)  # Green
         elif gesture == "CLOSED_FIST":
-            text = f"CLOSED FIST ({finger_count} fingers) - PAUSE ⏸"
+            text = f"CLOSED FIST ({finger_count} fingers) - PLAY ▶"
             color = (0, 0, 255)  # Red
+        elif gesture == "PEACE_SIGN":
+            text = f"PEACE SIGN ({finger_count} fingers) - REWIND ⏪"
+            color = (255, 0, 255)  # Magenta
+        elif gesture == "THREE_FINGERS":
+            text = f"THREE FINGERS ({finger_count} fingers) - FORWARD ⏩"
+            color = (255, 255, 0)  # Yellow
         else:
             text = f"UNKNOWN GESTURE ({finger_count} fingers)"
-            color = (255, 255, 0)  # Cyan
+            color = (128, 128, 128)  # Gray
         
         cv2.putText(img, text, (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 
                     0.9, color, 2, cv2.LINE_AA)
@@ -136,9 +154,12 @@ def main():
         cv2.putText(img, stability_text, (w - 300, 40),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.6, stability_color, 2, cv2.LINE_AA)
         
-        # Display instructions
-        cv2.putText(img, "Press 'Q' to quit", (20, h - 20),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (200, 200, 200), 1, cv2.LINE_AA)
+        # Display gesture guide at bottom
+        guide_y = h - 80
+        cv2.rectangle(img, (10, guide_y - 10), (w - 10, h - 10), (0, 0, 0), -1)
+        cv2.rectangle(img, (10, guide_y - 10), (w - 10, h - 10), (255, 255, 255), 1)
+        cv2.putText(img, "Gestures: Fist=Play | Palm=Pause | 2 Fingers=Rewind | 3 Fingers=Forward | Q=Quit", 
+                    (20, guide_y + 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (200, 200, 200), 1, cv2.LINE_AA)
         
         # Show the frame
         cv2.imshow("Pause or Play - Hand Gesture Control", img)

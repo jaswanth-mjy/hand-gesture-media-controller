@@ -134,19 +134,17 @@ class HandDetector:
         
         finger_count = self.count_fingers(landmarks)
         
-        # DEBUG: Print finger count to console
-        print(f"[DEBUG] Finger count: {finger_count}", end=" | ")
-        
-        # Make detection more forgiving
-        if finger_count >= 4:  # 4 or 5 fingers = open palm
+        # Gesture classification with 4 gestures
+        if finger_count >= 4:  # 4 or 5 fingers = open palm (PAUSE)
             gesture = "OPEN_PALM"
-            print("Gesture: OPEN_PALM", end=" ")
-        elif finger_count <= 1:  # 0 or 1 finger = closed fist
+        elif finger_count <= 1:  # 0 or 1 finger = closed fist (PLAY)
             gesture = "CLOSED_FIST"
-            print("Gesture: CLOSED_FIST", end=" ")
+        elif finger_count == 2:  # 2 fingers = peace sign (REWIND 10 seconds)
+            gesture = "PEACE_SIGN"
+        elif finger_count == 3:  # 3 fingers = three fingers (FORWARD 10 seconds)
+            gesture = "THREE_FINGERS"
         else:
             gesture = "UNKNOWN"
-            print("Gesture: UNKNOWN", end=" ")
         
         return gesture, finger_count, img
     
