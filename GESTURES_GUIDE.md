@@ -7,9 +7,10 @@
 | Gesture | Fingers | Symbol | Action | Description |
 |---------|---------|--------|--------|-------------|
 | **Closed Fist** | 0-1 | ✊ | **PLAY** | Start/Resume video playback |
-| **Open Palm** | 4-5 | 👋 | **PAUSE** | Pause video playback |
+| **Open Palm** | 5 | 👋 | **PAUSE** | Pause video playback |
 | **Peace Sign** | 2 | ✌️ | **REWIND** | Go back 10 seconds |
 | **Three Fingers** | 3 | 🤟 | **FORWARD** | Skip ahead 10 seconds |
+| **Four Fingers** | 4 | 🖖 | **SHUTDOWN** | Shutdown Mac system |
 
 ---
 
@@ -25,12 +26,12 @@
 - **Use when**: Video is paused and you want to start playing
 
 ### 2. 👋 Open Palm - PAUSE
-- **Finger Count**: 4-5 fingers extended
+- **Finger Count**: 5 fingers extended
 - **Action**: Pause video
 - **How to do it**:
   - Spread all 5 fingers wide and straight
   - Face palm directly toward camera
-  - Keep hand steady for 8 frames
+  - Keep hand steady for 12 frames
 - **Use when**: Video is playing and you want to pause
 
 ### 3. ✌️ Peace Sign - REWIND 10 SECONDS
@@ -49,9 +50,20 @@
 - **How to do it**:
   - Extend index, middle, and ring fingers
   - Keep pinky and thumb closed
-  - Hold steady for 8 frames
+  - Hold steady for 12 frames
 - **Use when**: You want to skip ahead in the video
 - **Keyboard equivalent**: Right arrow key
+
+### 5. 🖖 Four Fingers - SHUTDOWN MAC
+- **Finger Count**: 4 fingers extended (no thumb)
+- **Action**: Shutdown your Mac computer
+- **How to do it**:
+  - Extend all four fingers (index, middle, ring, pinky)
+  - Keep thumb folded/closed
+  - Hold steady for 12 frames
+- **Use when**: You want to shut down your Mac
+- **Warning**: This will initiate system shutdown - use carefully!
+- **System command**: Uses AppleScript shutdown dialog
 
 ---
 
@@ -69,8 +81,8 @@
 - Front lighting or overhead lighting works best
 
 ### Gesture Execution
-- Hold each gesture **steady** for at least 8 frames (~0.27 seconds)
-- Watch the **"Stability"** counter on screen (needs to reach 8/8)
+- Hold each gesture **steady** for at least 12 frames (~0.4 seconds)
+- Watch the **"Stability"** counter on screen (needs to reach 12/12)
 - Don't move your hand while performing gesture
 - Wait for **confirmation message** before changing gesture
 

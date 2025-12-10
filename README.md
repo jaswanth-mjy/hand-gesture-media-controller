@@ -12,11 +12,14 @@ A computer vision application that controls media playback (videos, music, strea
 
 ## ✨ Features
 
-- **🖐️ Open Palm (4-5 fingers extended)** → PLAY media
-- **✊ Closed Fist (0-1 fingers extended)** → PAUSE media
+- **✊ Closed Fist (0-1 fingers extended)** → PLAY media
+- **🖐️ Open Palm (5 fingers extended)** → PAUSE media
+- **✌️ Peace Sign (2 fingers)** → REWIND 10 seconds
+- **🤟 Three Fingers** → FORWARD 10 seconds
+- **🖖 Four Fingers** → SHUTDOWN Mac
 - **Universal Control**: Works with YouTube, Netflix, Spotify, VLC, QuickTime, and any media player
 - **Smart Detection**: Only sends commands when state needs to change (won't pause if already paused)
-- **Stable Recognition**: Requires 8 consecutive frames to confirm gesture (prevents false triggers)
+- **Stable Recognition**: Requires 12 consecutive frames to confirm gesture (prevents false triggers)
 - **Visual Feedback**: Real-time display of detected fingers, gesture, and media state
 - **Cross-platform**: Works on macOS, Windows, and Linux
 
@@ -38,9 +41,9 @@ Webcam → OpenCV → MediaPipe Hand Detection → Finger Counting → Gesture R
 1. Camera captures video frames at 30 FPS
 2. Each frame is analyzed by MediaPipe to detect hand landmarks
 3. Algorithm counts extended fingers by comparing fingertip positions with joint positions
-4. Gesture is classified: 4-5 fingers = OPEN_PALM, 0-1 fingers = CLOSED_FIST
-5. If gesture is stable for 8 frames (0.27 seconds), command is executed
-6. PyAutoGUI sends space bar press to control the active media player
+4. Gesture is classified: 5 fingers = OPEN_PALM, 0-1 fingers = CLOSED_FIST, 2 = PEACE_SIGN, 3 = THREE_FINGERS, 4 = FOUR_FINGERS
+5. If gesture is stable for 12 frames (0.4 seconds), command is executed
+6. PyAutoGUI sends keyboard commands (space, arrows, or shutdown) to control the system
 7. System tracks state to prevent duplicate commands
 
 ## 📋 Prerequisites
@@ -112,8 +115,11 @@ On macOS, you may need to grant camera access:
 1. **Open your media player** (YouTube in browser, VLC, Spotify, etc.)
 2. **Position yourself** in front of the camera
 3. **Show gestures:**
-   - 🖐️ **Open palm** (spread all 5 fingers) → PLAY
-   - ✊ **Closed fist** (make a fist) → PAUSE
+   - ✊ **Closed fist** (make a fist) → PLAY
+   - 🖐️ **Open palm** (spread all 5 fingers) → PAUSE
+   - ✌️ **Peace sign** (2 fingers) → REWIND 10 seconds
+   - 🤟 **Three fingers** → FORWARD 10 seconds
+   - 🖖 **Four fingers** (no thumb) → SHUTDOWN Mac
 4. Press **'Q'** to quit the application
 
 ## 📱 Supported Applications
