@@ -77,7 +77,7 @@ class HandDetector:
     
     def count_fingers(self, landmark_list):
         """
-        Count the number of extended fingers.
+        Count the number of extended fingers with improved accuracy.
         
         Args:
             landmark_list: List of landmark positions from get_finger_positions()
@@ -88,32 +88,51 @@ class HandDetector:
         if len(landmark_list) == 0:
             return -1
         
-        fingers_up = 0
+        fingers_up = []  # Store which fingers are up for better validation
         
-        # THUMB - Compare with wrist
+        # Get palm base for reference (middle point between wrist and middle MCP)
+        wrist_y = landmark_list[0][2]
+        middle_mcp_y = landmark_list[9][2]
+        palm_base_y = (wrist_y + middle_mcp_y) / 2
+        
+        # THUMB - Special handling for thumb
         thumb_tip_x = landmark_list[4][1]
+        thumb_tip_y = landmark_list[4][2]
+        thumb_ip_x = landmark_list[3][1]
         wrist_x = landmark_list[0][1]
         index_mcp_x = landmark_list[5][1]
         
-        # Thumb is extended if it's far from palm center
-        if abs(thumb_tip_x - wrist_x) > abs(index_mcp_x - wrist_x) * 0.5:
-            fingers_up += 1
+        # Thumb is extended if:
+        # 1. Tip is far from palm horizontally
+        # 2. Tip is not curled down (Y position check)
+        thumb_dist = abs(thumb_tip_x - wrist_x)
+        palm_width = abs(index_mcp_x - wrist_x)
         
-        # OTHER 4 FINGERS - Compare tip with MCP (knuckle base)
-        # Using MCP instead of PIP for more reliable detection
+        if thumb_dist > palm_width * 0.6 and thumb_tip_y < palm_base_y + 50:
+            fingers_up.append("thumb")
+        
+        # OTHER 4 FINGERS - Use both PIP and MCP for better accuracy
+        finger_names = ["index", "middle", "ring", "pinky"]
         finger_tips = [8, 12, 16, 20]  # Index, Middle, Ring, Pinky tips
-        finger_mcps = [5, 9, 13, 17]   # Their MCP (knuckle) joints
+        finger_pips = [6, 10, 14, 18]  # PIP joints
+        finger_mcps = [5, 9, 13, 17]   # MCP (knuckle) joints
         
         for i in range(4):
             tip_y = landmark_list[finger_tips[i]][2]
+            pip_y = landmark_list[finger_pips[i]][2]
             mcp_y = landmark_list[finger_mcps[i]][2]
             
-            # Finger is extended if tip is significantly ABOVE (lower Y than) the knuckle
-            # Larger threshold for more reliable detection
-            if tip_y < mcp_y - 40:
-                fingers_up += 1
+            # Finger is extended if:
+            # 1. Tip is significantly above PIP (at least 30 pixels)
+            # 2. PIP is above MCP (finger is straight, not bent at knuckle)
+            # This prevents counting slightly bent fingers
+            tip_pip_diff = pip_y - tip_y
+            pip_mcp_diff = mcp_y - pip_y
+            
+            if tip_pip_diff > 30 and pip_mcp_diff > -10:
+                fingers_up.append(finger_names[i])
         
-        return fingers_up
+        return len(fingers_up)
     
     def detect_gesture(self, img):
         """
@@ -134,14 +153,18 @@ class HandDetector:
         
         finger_count = self.count_fingers(landmarks)
         
-        # Gesture classification with 4 gestures
-        if finger_count >= 4:  # 4 or 5 fingers = open palm (PAUSE)
+        # Strict gesture classification to avoid confusion
+        if finger_count == 5:  # Exactly 5 fingers = open palm (PAUSE)
             gesture = "OPEN_PALM"
-        elif finger_count <= 1:  # 0 or 1 finger = closed fist (PLAY)
+        elif finger_count == 4:  # 4 fingers also counts as open palm
+            gesture = "OPEN_PALM"
+        elif finger_count == 0:  # Exactly 0 fingers = closed fist (PLAY)
             gesture = "CLOSED_FIST"
-        elif finger_count == 2:  # 2 fingers = peace sign (REWIND 10 seconds)
+        elif finger_count == 1:  # 1 finger also counts as closed fist
+            gesture = "CLOSED_FIST"
+        elif finger_count == 2:  # Exactly 2 fingers = peace sign (REWIND)
             gesture = "PEACE_SIGN"
-        elif finger_count == 3:  # 3 fingers = three fingers (FORWARD 10 seconds)
+        elif finger_count == 3:  # Exactly 3 fingers = forward sign
             gesture = "THREE_FINGERS"
         else:
             gesture = "UNKNOWN"

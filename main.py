@@ -55,7 +55,7 @@ def main():
     # State tracking
     last_gesture = None
     gesture_stable_frames = 0
-    stability_threshold = 8  # Number of consecutive frames needed to confirm gesture
+    stability_threshold = 12  # Number of consecutive frames needed to confirm gesture (increased for accuracy)
     command_executed_for_current_gesture = False  # Prevent repeat commands
     
     while True:
@@ -82,8 +82,9 @@ def main():
         
         # Debug output - print finger count for troubleshooting
         if finger_count >= 0:
-            gesture_display = f"{gesture} ({finger_count} fingers)"
-            print(f"Detection: {gesture_display:30} | Stable: {gesture_stable_frames:2}/{stability_threshold} | Media State: {controller.current_state or 'UNKNOWN':8}", end='\r')
+            gesture_display = f"{gesture} ({finger_count}F)"
+            confidence = "✓" if gesture_stable_frames >= stability_threshold else "..."
+            print(f"Detection: {gesture_display:25} | Stable: {gesture_stable_frames:2}/{stability_threshold} {confidence} | State: {controller.current_state or 'UNKNOWN':8}", end='\r')
         
         # Execute command ONCE when gesture is stable and command not yet executed
         if gesture_stable_frames >= stability_threshold and not command_executed_for_current_gesture:
@@ -111,9 +112,9 @@ def main():
         # Display information on screen
         h, w, c = img.shape
         
-        # Background for text (increased height for more gestures)
-        cv2.rectangle(img, (10, 10), (w - 10, 180), (0, 0, 0), -1)
-        cv2.rectangle(img, (10, 10), (w - 10, 180), (255, 255, 255), 2)
+        # Background for text (increased height for finger indicator)
+        cv2.rectangle(img, (10, 10), (w - 10, 200), (0, 0, 0), -1)
+        cv2.rectangle(img, (10, 10), (w - 10, 200), (255, 255, 255), 2)
         
         # Display gesture and finger count
         if gesture == "NO_HAND":
@@ -138,10 +139,16 @@ def main():
         cv2.putText(img, text, (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 
                     0.9, color, 2, cv2.LINE_AA)
         
-        # Display finger count
+        # Display finger count with visual indicator
         if finger_count >= 0:
-            cv2.putText(img, f"Fingers: {finger_count}", (20, 90),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2, cv2.LINE_AA)
+            finger_text = f"Fingers Detected: {finger_count}"
+            cv2.putText(img, finger_text, (20, 90),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2, cv2.LINE_AA)
+            
+            # Visual finger indicator
+            finger_indicator = "○ " * finger_count + "● " * (5 - finger_count)
+            cv2.putText(img, finger_indicator, (20, 160),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (100, 200, 255), 1, cv2.LINE_AA)
         
         # Display state
         state_text = f"State: {controller.current_state if controller.current_state else 'UNKNOWN'}"
