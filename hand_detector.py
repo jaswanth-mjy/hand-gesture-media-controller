@@ -161,8 +161,8 @@ class HandDetector:
         # Strict gesture classification to avoid confusion
         if finger_count == 5:  # Exactly 5 fingers = open palm (PAUSE)
             gesture = "OPEN_PALM"
-        elif finger_count == 4:  # Exactly 4 fingers (no thumb) = SHUTDOWN
-            gesture = "FOUR_FINGERS"
+        elif finger_count == 4:  # 4 fingers also counts as open palm
+            gesture = "OPEN_PALM"
         elif finger_count == 0:  # Exactly 0 fingers = closed fist (PLAY)
             gesture = "CLOSED_FIST"
         elif finger_count == 1:  # 1 finger also counts as closed fist

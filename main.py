@@ -46,10 +46,9 @@ def main():
     print("\n" + "=" * 70)
     print("GESTURES & CONTROLS:")
     print("  ✊ CLOSED FIST (0-1 fingers)    → PLAY ▶")
-    print("  👋 OPEN PALM (5 fingers)       → PAUSE ⏸")
+    print("  👋 OPEN PALM (4-5 fingers)     → PAUSE ⏸")
     print("  ✌️  PEACE SIGN (2 fingers)      → REWIND 10s ⏪")
     print("  🤟 THREE FINGERS (3 fingers)   → FORWARD 10s ⏩")
-    print("  🖐️  FOUR FINGERS (4 fingers)    → SHUTDOWN 🔴")
     print("\n  Press 'Q' to quit")
     print("=" * 70 + "\n")
     
@@ -109,11 +108,6 @@ def main():
                 if controller.skip_forward():
                     print("\n⏩ FORWARD 10 seconds - Three fingers detected")
                     command_executed_for_current_gesture = True
-            elif gesture == "FOUR_FINGERS":
-                # FOUR FINGERS = SHUTDOWN MAC
-                if controller.shutdown():
-                    print("\n🔴 SHUTDOWN initiated - Four fingers detected")
-                    command_executed_for_current_gesture = True
         
         # Display information on screen
         h, w, c = img.shape
@@ -138,9 +132,6 @@ def main():
         elif gesture == "THREE_FINGERS":
             text = f"THREE FINGERS ({finger_count} fingers) - FORWARD 10s"
             color = (255, 255, 0)  # Yellow
-        elif gesture == "FOUR_FINGERS":
-            text = f"FOUR FINGERS ({finger_count} fingers) - SHUTDOWN MAC"
-            color = (255, 0, 0)  # Bright Red
         else:
             text = f"UNKNOWN GESTURE ({finger_count} fingers)"
             color = (128, 128, 128)  # Gray
